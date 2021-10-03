@@ -13,4 +13,6 @@ import java.util.List;
 
 public interface TruckService {
     List<Truck> getAllTrucks();
+
+    Truck getOTruckById(Long id);
 }

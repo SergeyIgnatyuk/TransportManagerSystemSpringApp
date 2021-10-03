@@ -3,6 +3,7 @@ package com.dao;
 import com.model.Truck;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * DAO interface for {@link com.model.Truck}
@@ -13,4 +14,6 @@ import java.util.List;
 
 public interface TruckDao {
     List<Truck> findAll();
+
+    Optional<Truck> getOne(Long id);
 }

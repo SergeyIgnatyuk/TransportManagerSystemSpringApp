@@ -3,6 +3,7 @@ package com.dao;
 import com.model.Driver;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * DAO interface for {@link com.model.Driver}
@@ -13,4 +14,6 @@ import java.util.List;
 
 public interface DriverDao {
     List<Driver> findAll();
+
+    Optional<Driver> getOne(Long id);
 }

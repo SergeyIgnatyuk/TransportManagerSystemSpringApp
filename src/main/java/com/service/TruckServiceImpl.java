@@ -1,6 +1,7 @@
 package com.service;
 
 import com.dao.TruckDao;
+import com.exception.ResourceNotFoundException;
 import com.model.Truck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,11 @@ public class TruckServiceImpl implements TruckService {
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, readOnly = true)
     public List<Truck> getAllTrucks() {
         return truckDao.findAll();
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, readOnly = true)
+    public Truck getOTruckById(Long id) {
+        return truckDao.getOne(id).orElseThrow(() -> new ResourceNotFoundException("Truck with ID: " + id + "Not Found!"));
     }
 }

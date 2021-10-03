@@ -8,7 +8,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Implementation {@link DriverDao} interface
@@ -20,8 +23,12 @@ import java.util.List;
 @Repository
 public class JdbcDriverDaoImpl implements DriverDao {
 
-    private static final String SELECT_ALL_DRIVERS = "SELECT d.id, d.full_name, t.registration_number, t.name " +
+    private static final String SELECT_ALL_DRIVERS = "SELECT d.id, d.full_name, t.id, t.name, t.registration_number " +
             "FROM drivers d LEFT JOIN trucks t ON d.truck_id = t.id";
+
+    private static final String SELECT_ONE_DRIVER = "SELECT d.id, d.full_name, t.id, t.name, t.registration_number " +
+            "FROM drivers d LEFT JOIN trucks t ON d.truck_id = t.id " +
+            "WHERE d.id = :id";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -36,9 +43,27 @@ public class JdbcDriverDaoImpl implements DriverDao {
                 .id(resultSet.getLong("id"))
                 .fullName(resultSet.getString("full_name"))
                 .truck(Truck.builder()
+                        .id(resultSet.getLong("id"))
+                        .name((resultSet.getString("name")))
                         .registrationNumber(resultSet.getString("registration_number"))
-                        .name(resultSet.getString("name"))
                         .build())
                 .build()));
+    }
+
+    @Override
+    public Optional<Driver> getOne(Long id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        Driver driver = namedParameterJdbcTemplate.queryForObject(SELECT_ONE_DRIVER, params, ((resultSet, i) -> Driver.builder()
+                .id(resultSet.getLong("id"))
+                .fullName(resultSet.getString("full_name"))
+                .truck(Truck.builder()
+                        .id(resultSet.getLong("id"))
+                        .name((resultSet.getString("name")))
+                        .registrationNumber(resultSet.getString("registration_number"))
+                        .build())
+                .build()));
+
+        return Optional.ofNullable(driver);
     }
 }

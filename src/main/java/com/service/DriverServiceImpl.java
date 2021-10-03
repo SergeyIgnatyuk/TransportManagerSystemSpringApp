@@ -1,6 +1,7 @@
 package com.service;
 
 import com.dao.DriverDao;
+import com.exception.ResourceNotFoundException;
 import com.model.Driver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,11 @@ public class DriverServiceImpl implements DriverService {
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, readOnly = true)
     public List<Driver> getAllDrivers() {
         return driverDao.findAll();
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, readOnly = true)
+    public Driver getOneDriverById(Long id) {
+        return driverDao.getOne(id).orElseThrow(() -> new ResourceNotFoundException("Driver with ID: " + id + " Not Found!"));
     }
 }

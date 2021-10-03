@@ -17,7 +17,7 @@
 
         <context:component-scan base-package="com.dao.jdbc"/>
 
-        <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
             <property name="dataSource" ref="dataSource"/>
         </bean>
 
